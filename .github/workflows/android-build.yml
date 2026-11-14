@@ -68,11 +68,11 @@ jobs:
       - name: Build APK
         run: |
           mkdir -p output/CoinCollector2D/build
-          godot --headless --path output/CoinCollector2D --export-debug "Android" output/CoinCollector2D/build/NOIR.apk
+          godot --headless --path output/CoinCollector2D --export-debug "Android" build/NOIR.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: NOIR-Android-APK
-          path: output/CoinCollector2D/build/NOIR.apk
+          path: build/NOIR.apk
           if-no-files-found: error
