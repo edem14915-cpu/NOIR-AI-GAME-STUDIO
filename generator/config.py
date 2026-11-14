@@ -1,0 +1,3 @@
+GODOT_VERSION = "4.4"
+PROJECT_NAME = "NOIR_Generated_Game"
+DEFAULT_RENDERER = "mobile"
