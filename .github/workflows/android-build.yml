@@ -92,8 +92,19 @@ jobs:
           export/android/java_sdk_path = "$JAVA_HOME"
           SETTINGS
 
+      - name: Detect 3D project
+        id: detect_3d
+        run: |
+          if [ "$PROJECT_NAME" = "NOIR_3D_TEST" ] || [ -f "$PROJECT_DIR/noir_3d_request.json" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+            echo "NOIR AI: 3D project detected"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "NOIR AI: 2D project detected"
+          fi
+
       - name: Install Blender
-        if: env.PROJECT_NAME == 'NOIR_3D_TEST'
+        if: steps.detect_3d.outputs.enabled == 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y blender python3-numpy
@@ -115,22 +126,31 @@ jobs:
           if-no-files-found: error
 
       - name: Generate NOIR 3D models
-        if: env.PROJECT_NAME == 'NOIR_3D_TEST'
+        if: steps.detect_3d.outputs.enabled == 'true'
         run: |
           export PYTHONPATH="/usr/lib/python3/dist-packages:${PYTHONPATH:-}"
-          blender --background --python tools/noir_3d_generator.py -- building
-          blender --background --python tools/noir_3d_generator.py -- car
-          blender --background --python tools/noir_3d_generator.py -- tree
+
+          if [ -f "$PROJECT_DIR/noir_3d_request.json" ]; then
+            MODELS=$(python -c 'import json,sys; d=json.load(open(sys.argv[1])); a={"building","car","tree"}; m=d.get("models",[]); assert isinstance(m,list) and m and all(x in a for x in m), "Invalid 3D model list"; print("\n".join(dict.fromkeys(m)))' "$PROJECT_DIR/noir_3d_request.json")
+          else
+            MODELS=$(printf "building\ncar\ntree")
+          fi
+
+          while IFS= read -r model; do
+            [ -n "$model" ] || continue
+            echo "NOIR AI: Generating $model"
+            blender --background --python tools/noir_3d_generator.py -- "$model"
+          done <<< "$MODELS"
 
       - name: Copy Blender models into Godot project
-        if: env.PROJECT_NAME == 'NOIR_3D_TEST'
+        if: steps.detect_3d.outputs.enabled == 'true'
         run: |
           mkdir -p "$PROJECT_DIR/assets/models"
           cp output/noir_models/*.glb "$PROJECT_DIR/assets/models/"
           echo "Models copied into $PROJECT_DIR/assets/models"
 
       - name: Upload NOIR 3D models
-        if: env.PROJECT_NAME == 'NOIR_3D_TEST'
+        if: steps.detect_3d.outputs.enabled == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: NOIR-3D-Models
