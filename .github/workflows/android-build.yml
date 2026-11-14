@@ -47,7 +47,6 @@ jobs:
           unzip -q Godot_v4.4-stable_export_templates.tpz -d "$RUNNER_TEMP/godot-templates"
           mkdir -p "$HOME/.local/share/godot/export_templates/4.4.stable"
           cp -r "$RUNNER_TEMP/godot-templates/templates/." "$HOME/.local/share/godot/export_templates/4.4.stable/"
-          cp "$RUNNER_TEMP/godot-templates/version.txt" "$HOME/.local/share/godot/export_templates/4.4.stable/version.txt"
 
       - name: Configure Godot Android paths
         run: |
