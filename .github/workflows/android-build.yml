@@ -98,6 +98,10 @@ jobs:
           sudo apt-get install -y blender
           blender --version
 
+      - name: Generate 3D model with Blender
+        run: |
+          blender --background --python tools/blender_test.py
+
       - name: Check project
         run: |
           test -f "$PROJECT_DIR/project.godot"
