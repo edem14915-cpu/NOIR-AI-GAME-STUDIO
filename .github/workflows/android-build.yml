@@ -95,11 +95,13 @@ jobs:
       - name: Install Blender
         run: |
           sudo apt-get update
-          sudo apt-get install -y blender
+          sudo apt-get install -y blender python3-numpy
           blender --version
 
       - name: Generate 3D model with Blender
         run: |
+          export PYTHONPATH="/usr/lib/python3/dist-packages:${PYTHONPATH:-}"
+          blender --background --python-expr "import numpy; print('NumPy:', numpy.__version__)"
           blender --background --python tools/blender_test.py
 
       - name: Check project
