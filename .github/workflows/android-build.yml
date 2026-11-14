@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - name: Download project
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Java
         uses: actions/setup-java@v5
@@ -22,7 +22,11 @@ jobs:
 
       - name: Install Android packages
         run: |
-          SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-$HOME/.android/sdk}}"
+          SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
+          if [ -z "$SDK_ROOT" ]; then
+            echo "Android SDK path is missing"
+            exit 1
+          fi
           echo "ANDROID_HOME=$SDK_ROOT" >> "$GITHUB_ENV"
           echo "ANDROID_SDK_ROOT=$SDK_ROOT" >> "$GITHUB_ENV"
           sdkmanager --sdk_root="$SDK_ROOT" \
@@ -32,6 +36,30 @@ jobs:
             "cmdline-tools;latest" \
             "cmake;3.10.2.4988404" \
             "ndk;23.2.8568313"
+
+      - name: Check Android SDK
+        run: |
+          echo "Android SDK: $ANDROID_HOME"
+          test -x "$ANDROID_HOME/platform-tools/adb"
+          test -x "$ANDROID_HOME/build-tools/34.0.0/apksigner"
+          test -d "$ANDROID_HOME/platforms/android-34"
+          "$ANDROID_HOME/platform-tools/adb" start-server
+
+      - name: Create debug signing key
+        run: |
+          mkdir -p "$HOME/.android"
+          keytool -genkeypair \
+            -keystore "$HOME/.android/debug.keystore" \
+            -storetype JKS \
+            -storepass android \
+            -alias androiddebugkey \
+            -keypass android \
+            -dname "CN=Android Debug,O=Android,C=US" \
+            -keyalg RSA \
+            -validity 10000
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PATH=$HOME/.android/debug.keystore" >> "$GITHUB_ENV"
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_USER=androiddebugkey" >> "$GITHUB_ENV"
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD=android" >> "$GITHUB_ENV"
 
       - name: Install Godot
         run: |
@@ -48,18 +76,6 @@ jobs:
           mkdir -p "$HOME/.local/share/godot/export_templates/4.4.stable"
           cp -r "$RUNNER_TEMP/godot-templates/templates/." "$HOME/.local/share/godot/export_templates/4.4.stable/"
 
-      - name: Configure Godot Android paths
-        run: |
-          SDK_ROOT="${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
-          mkdir -p "$HOME/.config/godot"
-          cat > "$HOME/.config/godot/editor_settings-4.tres" <<SETTINGS
-          [gd_resource type="EditorSettings" format=3]
-
-          [resource]
-          export/android/android_sdk_path = "$SDK_ROOT"
-          export/android/java_sdk_path = "$JAVA_HOME"
-          SETTINGS
-
       - name: Check project
         run: |
           godot --headless --editor --path output/CoinCollector2D --quit
@@ -67,7 +83,7 @@ jobs:
       - name: Build APK
         run: |
           mkdir -p output/CoinCollector2D/build
-          godot --headless --path output/CoinCollector2D --export-debug "Android" "$GITHUB_WORKSPACE/output/CoinCollector2D/build/NOIR.apk"
+          godot --headless --verbose --path output/CoinCollector2D --export-debug "Android" "$GITHUB_WORKSPACE/output/CoinCollector2D/build/NOIR.apk"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
