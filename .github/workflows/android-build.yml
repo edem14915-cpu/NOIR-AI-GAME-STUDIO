@@ -104,6 +104,13 @@ jobs:
           blender --background --python-expr "import numpy; print('NumPy:', numpy.__version__)"
           blender --background --python tools/blender_test.py
 
+      - name: Upload Blender 3D model
+        uses: actions/upload-artifact@v4
+        with:
+          name: NOIR-3D-Model
+          path: output/blender_test/NOIR_Test.glb
+          if-no-files-found: error
+
       - name: Check project
         run: |
           test -f "$PROJECT_DIR/project.godot"
