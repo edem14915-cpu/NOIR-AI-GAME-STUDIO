@@ -1,0 +1,21 @@
+config_version=5
+
+[application]
+config/name="Coin Collector"
+run/main_scene="res://scenes/main_menu.tscn"
+config/features=PackedStringArray("4.4", "GL Compatibility")
+
+[display]
+window/size/viewport_width=540
+window/size/viewport_height=960
+window/handheld/orientation=1
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
+
+[input_devices]
+pointing/emulate_touch_from_mouse=true
+
+[rendering]
+textures/vram_compression/import_etc2_astc=true
+renderer/rendering_method="gl_compatibility"
+config/driver_name="gl_compatibility"
