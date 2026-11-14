@@ -27,6 +27,7 @@ func _ready() -> void:
 	main_menu.visible = true
 	play_btn.pressed.connect(_on_play_pressed)
 	jump_btn.pressed.connect(_on_jump_pressed)
+	_load_generated_models()
 
 func _on_play_pressed() -> void:
 	main_menu.visible = false
@@ -92,3 +93,28 @@ func _physics_process(delta: float) -> void:
 		player.velocity.z = move_toward(player.velocity.z, 0, SPEED)
 
 	player.move_and_slide()
+
+
+# NOIR AI: Generated 3D models
+func _load_generated_models() -> void:
+	_add_generated_model("building.glb", Vector3(-20, 0, -12))
+	_add_generated_model("car.glb", Vector3(4, 0, -8))
+	_add_generated_model("tree.glb", Vector3(12, 0, -12))
+
+
+func _add_generated_model(file_name: String, spawn_position: Vector3) -> void:
+	var model_path = "res://assets/models/" + file_name
+	var model_resource = load(model_path)
+
+	if model_resource == null:
+		push_warning("NOIR AI: Model not found: " + model_path)
+		return
+
+	if not model_resource is PackedScene:
+		push_warning("NOIR AI: Invalid model: " + model_path)
+		return
+
+	var model = model_resource.instantiate()
+	add_child(model)
+	model.position = spawn_position
+	print("NOIR AI: Model loaded: ", file_name)

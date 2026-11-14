@@ -93,18 +93,21 @@ jobs:
           SETTINGS
 
       - name: Install Blender
+        if: env.PROJECT_NAME == 'NOIR_3D_TEST'
         run: |
           sudo apt-get update
           sudo apt-get install -y blender python3-numpy
           blender --version
 
       - name: Generate 3D model with Blender
+        if: env.PROJECT_NAME == 'NOIR_3D_TEST'
         run: |
           export PYTHONPATH="/usr/lib/python3/dist-packages:${PYTHONPATH:-}"
           blender --background --python-expr "import numpy; print('NumPy:', numpy.__version__)"
           blender --background --python tools/blender_test.py
 
       - name: Upload Blender 3D model
+        if: env.PROJECT_NAME == 'NOIR_3D_TEST'
         uses: actions/upload-artifact@v4
         with:
           name: NOIR-3D-Model
@@ -112,13 +115,22 @@ jobs:
           if-no-files-found: error
 
       - name: Generate NOIR 3D models
+        if: env.PROJECT_NAME == 'NOIR_3D_TEST'
         run: |
           export PYTHONPATH="/usr/lib/python3/dist-packages:${PYTHONPATH:-}"
           blender --background --python tools/noir_3d_generator.py -- building
           blender --background --python tools/noir_3d_generator.py -- car
           blender --background --python tools/noir_3d_generator.py -- tree
 
+      - name: Copy Blender models into Godot project
+        if: env.PROJECT_NAME == 'NOIR_3D_TEST'
+        run: |
+          mkdir -p "$PROJECT_DIR/assets/models"
+          cp output/noir_models/*.glb "$PROJECT_DIR/assets/models/"
+          echo "Models copied into $PROJECT_DIR/assets/models"
+
       - name: Upload NOIR 3D models
+        if: env.PROJECT_NAME == 'NOIR_3D_TEST'
         uses: actions/upload-artifact@v4
         with:
           name: NOIR-3D-Models
