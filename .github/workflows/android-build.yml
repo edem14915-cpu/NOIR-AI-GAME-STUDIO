@@ -2,14 +2,30 @@ name: NOIR AI Android Build
 
 on:
   workflow_dispatch:
+    inputs:
+      project_name:
+        description: "Название папки игры в output"
+        required: true
+        type: string
+        default: CoinCollector2D
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      PROJECT_NAME: ${{ inputs.project_name }}
 
     steps:
       - name: Download project
         uses: actions/checkout@v5
+
+      - name: Validate project name
+        run: |
+          if [[ ! "$PROJECT_NAME" =~ ^[A-Za-z0-9_-]+$ ]]; then
+            echo "Invalid project name"
+            exit 1
+          fi
+          echo "PROJECT_DIR=output/$PROJECT_NAME" >> "$GITHUB_ENV"
 
       - name: Set up Java
         uses: actions/setup-java@v5
@@ -23,10 +39,7 @@ jobs:
       - name: Install Android packages
         run: |
           SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
-          if [ -z "$SDK_ROOT" ]; then
-            echo "Android SDK path is missing"
-            exit 1
-          fi
+          test -n "$SDK_ROOT"
           echo "ANDROID_HOME=$SDK_ROOT" >> "$GITHUB_ENV"
           echo "ANDROID_SDK_ROOT=$SDK_ROOT" >> "$GITHUB_ENV"
           sdkmanager --sdk_root="$SDK_ROOT" \
@@ -36,14 +49,6 @@ jobs:
             "cmdline-tools;latest" \
             "cmake;3.10.2.4988404" \
             "ndk;23.2.8568313"
-
-      - name: Check Android SDK
-        run: |
-          echo "Android SDK: $ANDROID_HOME"
-          test -x "$ANDROID_HOME/platform-tools/adb"
-          test -x "$ANDROID_HOME/build-tools/34.0.0/apksigner"
-          test -d "$ANDROID_HOME/platforms/android-34"
-          "$ANDROID_HOME/platform-tools/adb" start-server
 
       - name: Create debug signing key
         run: |
@@ -76,33 +81,33 @@ jobs:
           mkdir -p "$HOME/.local/share/godot/export_templates/4.4.stable"
           cp -r "$RUNNER_TEMP/godot-templates/templates/." "$HOME/.local/share/godot/export_templates/4.4.stable/"
 
-      - name: Check project
-        run: |
-          godot --headless --editor --path output/CoinCollector2D --quit
-
       - name: Configure Godot Android paths
         run: |
-          SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
-          test -n "$SDK_ROOT"
-          test -d "$SDK_ROOT/platform-tools"
-          test -n "$JAVA_HOME"
           mkdir -p "$HOME/.config/godot"
           cat > "$HOME/.config/godot/editor_settings-4.4.tres" <<SETTINGS
           [gd_resource type="EditorSettings" format=3]
 
           [resource]
-          export/android/android_sdk_path = "$SDK_ROOT"
+          export/android/android_sdk_path = "$ANDROID_HOME"
           export/android/java_sdk_path = "$JAVA_HOME"
           SETTINGS
 
+      - name: Check project
+        run: |
+          test -f "$PROJECT_DIR/project.godot"
+          test -f "$PROJECT_DIR/export_presets.cfg"
+          godot --headless --editor --path "$PROJECT_DIR" --quit
+
       - name: Build APK
         run: |
-          mkdir -p output/CoinCollector2D/build
-          godot --headless --verbose --path output/CoinCollector2D --export-debug "Android" "$GITHUB_WORKSPACE/output/CoinCollector2D/build/NOIR.apk"
+          mkdir -p "$PROJECT_DIR/build"
+          godot --headless --verbose --path "$PROJECT_DIR" \
+            --export-debug "Android" \
+            "$GITHUB_WORKSPACE/$PROJECT_DIR/build/NOIR.apk"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: NOIR-Android-APK
-          path: output/CoinCollector2D/build/NOIR.apk
+          path: ${{ env.PROJECT_DIR }}/build/NOIR.apk
           if-no-files-found: error
