@@ -92,6 +92,12 @@ jobs:
           export/android/java_sdk_path = "$JAVA_HOME"
           SETTINGS
 
+      - name: Install Blender
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y blender
+          blender --version
+
       - name: Check project
         run: |
           test -f "$PROJECT_DIR/project.godot"
