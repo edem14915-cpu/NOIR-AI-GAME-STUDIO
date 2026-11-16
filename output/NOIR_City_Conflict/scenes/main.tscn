@@ -1,0 +1,365 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Script" path="res://scripts/player.gd" id="2_player"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
+sky_top_color = Color(0.05, 0.07, 0.12, 1)
+sky_horizon_color = Color(0.15, 0.18, 0.25, 1)
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("ProceduralSkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+ambient_light_source = 2
+ambient_light_color = Color(0.2, 0.2, 0.3, 1)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
+size = Vector3(100, 1, 100)
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_main")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866, -0.353, 0.353, 0, 0.707, 0.707, -0.5, -0.612, 0.612, 0, 15, 0)
+light_color = Color(0.8, 0.85, 1, 1)
+light_energy = 0.8
+shadow_enabled = true
+
+[node name="Environment3D" type="Node3D" parent="."]
+
+[node name="Floor" type="StaticBody3D" parent="Environment3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment3D/Floor"]
+shape = SubResource("BoxShape3D_floor")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Environment3D/Floor"]
+size = Vector3(100, 1, 100)
+
+[node name="Building1" type="CSGBox3D" parent="Environment3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 5, -12)
+size = Vector3(6, 10, 8)
+
+[node name="Building2" type="CSGBox3D" parent="Environment3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 7, -15)
+size = Vector3(8, 14, 8)
+
+[node name="Car" type="CSGBox3D" parent="Environment3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1, -5)
+size = Vector3(2, 1.2, 4)
+
+[node name="Player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+script = ExtResource("2_player")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+shape = SubResource("CapsuleShape3D_1")
+
+[node name="Head" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Player/Head"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MainMenu" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Title" type="Label" parent="CanvasLayer/MainMenu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 40.0
+offset_right = 200.0
+offset_bottom = 90.0
+grow_horizontal = 2
+text = "NOIR: CITY CONFLICT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/MainMenu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -80.0
+offset_right = 100.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="BtnPlay" type="Button" parent="CanvasLayer/MainMenu/VBox"]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+text = "Играть"
+
+[node name="BtnSettings" type="Button" parent="CanvasLayer/MainMenu/VBox"]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+text = "Настройки"
+
+[node name="BtnAbout" type="Button" parent="CanvasLayer/MainMenu/VBox"]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+text = "Об игре"
+
+[node name="BtnExit" type="Button" parent="CanvasLayer/MainMenu/VBox"]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+text = "Выход"
+
+[node name="HUD" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="StatsContainer" type="VBoxContainer" parent="CanvasLayer/HUD"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 220.0
+offset_bottom = 120.0
+
+[node name="HPLabel" type="Label" parent="CanvasLayer/HUD/StatsContainer"]
+layout_mode = 2
+text = "Здоровье: 100"
+
+[node name="ArmorLabel" type="Label" parent="CanvasLayer/HUD/StatsContainer"]
+layout_mode = 2
+text = "Броня: 50"
+
+[node name="AmmoLabel" type="Label" parent="CanvasLayer/HUD/StatsContainer"]
+layout_mode = 2
+text = "Патроны: 30 / 90"
+
+[node name="WeaponLabel" type="Label" parent="CanvasLayer/HUD/StatsContainer"]
+layout_mode = 2
+text = "Оружие: Автомат"
+
+[node name="TaskLabel" type="Label" parent="CanvasLayer/HUD"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 20.0
+offset_right = 150.0
+offset_bottom = 50.0
+grow_horizontal = 2
+text = "Задание: Разведать сектор"
+horizontal_alignment = 1
+
+[node name="MinimapBox" type="ColorRect" parent="CanvasLayer/HUD"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -110.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 110.0
+grow_horizontal = 0
+color = Color(0.1, 0.1, 0.15, 0.7)
+
+[node name="MapText" type="Label" parent="CanvasLayer/HUD/MinimapBox"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -30.0
+offset_top = -12.0
+offset_right = 30.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "[ КАРТА ]"
+horizontal_alignment = 1
+
+[node name="BtnPause" type="Button" parent="CanvasLayer/HUD"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -110.0
+offset_top = 120.0
+offset_right = -20.0
+offset_bottom = 155.0
+grow_horizontal = 0
+text = "Пауза"
+
+[node name="TouchShoot" type="Button" parent="CanvasLayer/HUD"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -160.0
+offset_top = -160.0
+offset_right = -40.0
+offset_bottom = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "ОГОНЬ"
+
+[node name="TouchJump" type="Button" parent="CanvasLayer/HUD"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -260.0
+offset_top = -100.0
+offset_right = -180.0
+offset_bottom = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Прыжок"
+
+[node name="TouchCrouch" type="Button" parent="CanvasLayer/HUD"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -260.0
+offset_top = -170.0
+offset_right = -180.0
+offset_bottom = -110.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Присед"
+
+[node name="TouchInteract" type="Button" parent="CanvasLayer/HUD"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 180.0
+offset_top = -100.0
+offset_right = 280.0
+offset_bottom = -40.0
+grow_vertical = 0
+text = "Действие"
+
+[node name="TouchLookPanel" type="Control" parent="CanvasLayer/HUD"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="SettingsMenu" type="Panel" parent="CanvasLayer"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -160.0
+offset_right = 180.0
+offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/SettingsMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 15
+
+[node name="Title" type="Label" parent="CanvasLayer/SettingsMenu/VBox"]
+layout_mode = 2
+text = "НАСТРОЙКИ ГРАФИКИ"
+horizontal_alignment = 1
+
+[node name="BtnPresetLow" type="Button" parent="CanvasLayer/SettingsMenu/VBox"]
+layout_mode = 2
+text = "Качество: Низкое (90 FPS)"
+
+[node name="BtnPresetMed" type="Button" parent="CanvasLayer/SettingsMenu/VBox"]
+layout_mode = 2
+text = "Качество: Среднее"
+
+[node name="BtnPresetHigh" type="Button" parent="CanvasLayer/SettingsMenu/VBox"]
+layout_mode = 2
+text = "Качество: Высокое"
+
+[node name="BtnBackSettings" type="Button" parent="CanvasLayer/SettingsMenu/VBox"]
+layout_mode = 2
+text = "Назад"
+
+[node name="AboutMenu" type="Panel" parent="CanvasLayer"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -120.0
+offset_right = 200.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/AboutMenu"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 20.0
+offset_bottom = 140.0
+grow_horizontal = 2
+text = "NOIR: CITY CONFLICT\nРазработчик: NOIR AI GAME STUDIO\nОптимизировано под Android."
+horizontal_alignment = 1
+
+[node name="BtnBackAbout" type="Button" parent="CanvasLayer/AboutMenu"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -60.0
+offset_top = -50.0
+offset_right = 60.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Закрыть"
