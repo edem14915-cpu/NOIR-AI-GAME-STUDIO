@@ -15,7 +15,7 @@ var touch_start_pos: Vector2 = Vector2.ZERO
 
 var is_active: bool = false
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if not is_active:
 		return
 
