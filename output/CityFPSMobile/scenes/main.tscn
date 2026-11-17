@@ -1,9 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://c8y3k1f4x2n01"]
+[gd_scene load_steps=11 format=3 uid="uid://c8y3k1f4x2n01"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="2_player"]
-[ext_resource type="PackedScene" path="res://assets/models/building.glb" id="3_bld"]
-[ext_resource type="PackedScene" path="res://assets/models/car.glb" id="4_car"]
+[ext_resource type="PackedScene" path="res://assets/models/ferrari_daytona_sp3.glb" id="4_car"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 sky_top_color = Color(0.385, 0.647, 0.969, 1)
@@ -53,17 +52,15 @@ shape = SubResource("BoxShape3D_ground")
 
 [node name="CityLayout" type="Node3D" parent="."]
 
-[node name="Building1" parent="CityLayout" instance=ExtResource("3_bld")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -15)
 
-[node name="Building2" parent="CityLayout" instance=ExtResource("3_bld")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, -15)
 
 [node name="Car1" parent="CityLayout" instance=ExtResource("4_car")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.1, -5)
+scale = Vector3(0.14, 0.14, 0.14)
 
 [node name="Car2" parent="CityLayout" instance=ExtResource("4_car")]
 transform = Transform3D(-0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, -0.866025, 5, 0.1, -8)
+scale = Vector3(0.14, 0.14, 0.14)
 
 [node name="Player" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
