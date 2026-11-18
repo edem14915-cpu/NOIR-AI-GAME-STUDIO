@@ -1,0 +1,23 @@
+[gd_project]
+config_version=4
+run/main_scene="res://scenes/main.tscn"
+display/window/size/width=1080
+display/window/size/height=1920
+display/window/stretch_mode="2d"
+display/window/stretch_aspect="keep"
+rendering/renderer/mobile=true
+application/run/disable_stdout=false
+application/run/disable_stderr=false
+[application]
+run/max_fps=90
+config/icon="res://icon.png"
+config/name="LAST SIGNAL"
+config/description="3D FPS survival in an abandoned forest"
+config/orientation="landscape"
+
+[display]
+window/frame_pacing/android/enable_frame_pacing=true
+window/handheld/orientation=0
+
+[rendering]
+textures/vram_compression/import_etc2_astc=true
