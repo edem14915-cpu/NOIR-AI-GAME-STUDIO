@@ -1,0 +1,17 @@
+[gd_project]
+config_version=4
+run/main_scene="res://scenes/main.tscn"
+[display]
+window/size=1280,720
+window/stretch_mode="2d"
+window/stretch_aspect="keep"
+[rendering]
+textures/vram_compression/import_etc2_astc=true
+renderer/driver="mobile"
+[application]
+config/icon="res://icon.png"
+config/name="NIGHT SHIFT: LAST TRAIN"
+run/orientation="landscape"
+[android]
+package/unique_name="com.noir.nightshiftlasttrain"
+package/name="NIGHT SHIFT: LAST TRAIN"
