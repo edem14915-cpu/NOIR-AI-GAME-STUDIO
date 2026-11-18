@@ -1,0 +1,26 @@
+[gd_scene load_steps=6 format=3 uid="UID-4"]
+[ext_resource path="res://assets/models/building.glb" type="PackedScene" id=1]
+[ext_resource path="res://assets/models/car.glb" type="PackedScene" id=2]
+[ext_resource path="res://assets/models/tree.glb" type="PackedScene" id=3]
+[ext_resource path="res://scripts/environment.gd" type="Script" id=4]
+[node name="Environment" type="Node3D"]
+script = ExtResource( 4 )
+# Ground
+[node name="Ground" type="MeshInstance3D" parent="."]
+mesh = PlaneMesh { size = Vector2(200,200) }
+material_override = StandardMaterial3D { albedo_color = Color(0.1,0.3,0.1) }
+# Trees
+[instance node="Tree1" parent="."]
+instance = ExtResource( 3 )
+position = Vector3(-20,0,-30)
+[instance node="Tree2" parent="."]
+instance = ExtResource( 3 )
+position = Vector3(15,0,40)
+# Buildings (base)
+[instance node="Base" parent="."]
+instance = ExtResource( 1 )
+position = Vector3(0,0,0)
+# Cars
+[instance node="Car1" parent="."]
+instance = ExtResource( 2 )
+position = Vector3(10,0,-5)
