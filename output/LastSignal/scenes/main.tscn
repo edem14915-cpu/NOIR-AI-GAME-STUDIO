@@ -1,0 +1,6 @@
+[gd_scene load_steps=5 format=3 uid="UID-123456"]
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id=1]
+[ext_resource type="PackedScene" path="res://scenes/world.tscn" id=2]
+[node name="Main" type="Node3D"]
+child_node={"name":"World","instance":2}
+child_node={"name":"Player","instance":1}
