@@ -7,7 +7,6 @@ renderer/mobile=true
 [display]
 window/frame_pacing/android/enable_frame_pacing=true
 window/handheld/orientation=0
-orientation=landscape
 [android]
 package/unique_name="org.noirai.lastsignal"
 package/name="LAST SIGNAL"
