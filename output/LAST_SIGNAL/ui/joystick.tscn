@@ -1,0 +1,4 @@
+[gd_scene load_steps=2 format=3 uid="UID-3"]
+[ext_resource path="res://scripts/joystick.gd" type="Script" id=1]
+[node name="Joystick" type="Control"]
+script = ExtResource( 1 )
