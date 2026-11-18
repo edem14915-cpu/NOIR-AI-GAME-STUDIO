@@ -1,0 +1,7 @@
+[gd_scene load_steps=6 format=3 uid="UID-WORLD"]
+[node name="World" type="Node3D"]
+[ext_resource type="PackedScene" path="res://assets/models/building.tscn" id=1]
+[ext_resource type="PackedScene" path="res://assets/models/tree.tscn" id=2]
+[instanced_scene instance=1 parent="."]
+[instanced_scene instance=2 parent="."]
+[instanced_scene instance=2 transform="Transform3D( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )" parent="."]
