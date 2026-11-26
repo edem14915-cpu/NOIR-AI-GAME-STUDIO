@@ -1,0 +1,98 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemy_spawner.gd" id="1_sp"]
+[ext_resource type="PackedScene" path="res://scenes/Enemy.tscn" id="2_en"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_Road"]
+albedo_color = Color(0.08, 0.08, 0.1, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Mat_Building"]
+albedo_color = Color(0.12, 0.15, 0.22, 1)
+metallic = 0.3
+roughness = 0.7
+
+[sub_resource type="StandardMaterial3D" id="Mat_NeonCyan"]
+albedo_color = Color(0, 0.8, 1, 1)
+emission_enabled = true
+emission = Color(0, 0.8, 1, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="StandardMaterial3D" id="Mat_NeonMagenta"]
+albedo_color = Color(1, 0, 0.6, 1)
+emission_enabled = true
+emission = Color(1, 0, 0.6, 1)
+emission_energy_multiplier = 3.0
+
+[node name="Level1" type="Node3D"]
+
+[node name="Ground" type="CSGBox3D" parent="."]
+use_collision = true
+size = Vector3(100, 0.2, 100)
+material = SubResource("Mat_Road")
+
+[node name="Buildings" type="Node3D" parent="."]
+
+[node name="B1" type="CSGBox3D" parent="Buildings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 10, -15)
+use_collision = true
+size = Vector3(12, 20, 12)
+material = SubResource("Mat_Building")
+
+[node name="NeonStrip" type="CSGBox3D" parent="Buildings/B1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.1, 0, 0)
+size = Vector3(0.1, 18, 0.8)
+material = SubResource("Mat_NeonCyan")
+
+[node name="B2" type="CSGBox3D" parent="Buildings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 12, -15)
+use_collision = true
+size = Vector3(14, 24, 14)
+material = SubResource("Mat_Building")
+
+[node name="NeonStrip" type="CSGBox3D" parent="Buildings/B2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.1, 2, 0)
+size = Vector3(0.1, 16, 1.2)
+material = SubResource("Mat_NeonMagenta")
+
+[node name="B3" type="CSGBox3D" parent="Buildings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 8, 15)
+use_collision = true
+size = Vector3(10, 16, 10)
+material = SubResource("Mat_Building")
+
+[node name="B4" type="CSGBox3D" parent="Buildings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 9, 15)
+use_collision = true
+size = Vector3(12, 18, 12)
+material = SubResource("Mat_Building")
+
+[node name="StreetLights" type="Node3D" parent="."]
+
+[node name="Lamp1" type="OmniLight3D" parent="StreetLights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 4, -6)
+light_color = Color(0.2, 0.8, 1, 1)
+light_energy = 3.0
+omni_range = 15.0
+
+[node name="Lamp2" type="OmniLight3D" parent="StreetLights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 4, 6)
+light_color = Color(1, 0.2, 0.7, 1)
+light_energy = 3.0
+omni_range = 15.0
+
+[node name="EnemySpawner" type="Node3D" parent="."]
+script = ExtResource("1_sp")
+enemy_scene = ExtResource("2_en")
+
+[node name="P1" type="Marker3D" parent="EnemySpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1, -12)
+
+[node name="P2" type="Marker3D" parent="EnemySpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1, -12)
+
+[node name="P3" type="Marker3D" parent="EnemySpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1, 12)
+
+[node name="P4" type="Marker3D" parent="EnemySpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1, 12)
