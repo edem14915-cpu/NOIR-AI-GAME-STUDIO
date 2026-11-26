@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemy.gd" id="1_e"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
+radius = 0.45
+height = 1.9
+
+[sub_resource type="StandardMaterial3D" id="Mat_Robot"]
+albedo_color = Color(0.8, 0.1, 0.1, 1)
+metallic = 0.6
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="Mat_Eye"]
+albedo_color = Color(0, 1, 1, 1)
+emission_enabled = true
+emission = Color(0, 1, 1, 1)
+emission_energy_multiplier = 4.0
+
+[node name="Enemy" type="CharacterBody3D"]
+script = ExtResource("1_e")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_1")
+
+[node name="CSGMesh3D" type="CSGBox3D" parent="."]
+size = Vector3(0.7, 1.8, 0.5)
+material_override = SubResource("Mat_Robot")
+
+[node name="Eyes" type="CSGBox3D" parent="CSGMesh3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.26)
+size = Vector3(0.5, 0.12, 0.05)
+material = SubResource("Mat_Eye")
