@@ -1,39 +1,62 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=6 format=3 uid="[uid]"]
+[ext_resource type="Script" path="res://scripts/ui.gd" id=1]
 [node name="UI" type="CanvasLayer"]
-[ext_resource type="Texture2D" uid="1" path="res://assets/joystick_bg.png"]
-[ext_resource type="Texture2D" uid="2" path="res://assets/joystick_knob.png"]
 [node name="HUD" type="Control" parent="UI"]
+anchor_left = 0.0
+anchor_top = 0.0
 anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_bottom = 0.0
+margin_top = 10.0
+margin_left = 10.0
 [node name="HPBar" type="TextureProgressBar" parent="HUD"]
-anchor_left = 0.02
-anchor_top = 0.02
-size = Vector2(200,30)
-texture_progress = ExtResource( 1 )
+anchor_left = 0.0
+anchor_top = 0.0
+size = Vector2(200,20)
+value = 100
+max_value = 100
 [node name="AmmoLabel" type="Label" parent="HUD"]
-anchor_left = 0.02
-anchor_top = 0.07
-text = "AMMO: 0"
+anchor_right = 0.0
+anchor_top = 0.0
+margin_left = 220
+margin_top = 0
+text = "Ammo: 30"
 [node name="WaveLabel" type="Label" parent="HUD"]
-anchor_left = 0.02
-anchor_top = 0.12
-text = "WAVE: 0"
+anchor_right = 0.0
+anchor_top = 0.0
+margin_left = 350
+margin_top = 0
+text = "Wave: 1"
 [node name="Joystick" type="TouchScreenButton" parent="UI"]
-texture_normal = ExtResource( 1 )
-position = Vector2(120,540)
-[node name="JoystickKnob" type="TextureRect" parent="Joystick"]
-texture = ExtResource( 2 )
-anchor_center = true
-position = Vector2(0,0)
-[node name="FireButton" type="TouchScreenButton" parent="UI"]
-texture_normal = ExtResource( 2 )
-position = Vector2(1100,540)
-[node name="ReloadButton" type="TouchScreenButton" parent="UI"]
-texture_normal = ExtResource( 2 )
-position = Vector2(960,540)
+position = Vector2(100,600)
+texture_normal = null
+[node name="FireBtn" type="TouchScreenButton" parent="UI"]
+position = Vector2(1100,600)
+texture_normal = null
+[node name="ReloadBtn" type="TouchScreenButton" parent="UI"]
+position = Vector2(1220,600)
+texture_normal = null
 [node name="MenuScreen" type="Control" parent="UI"]
 mouse_filter = 2
+anchor_left = 0.0
+anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-[connection signal="pressed" from="FireButton" to=".." method="_on_fire_pressed"]
-[connection signal="pressed" from="ReloadButton" to=".." method="_on_reload_pressed"]
+visible = false
+[node name="StartBtn" type="Button" parent="MenuScreen"]
+text = "START"
+rect_position = Vector2(540,300)
+[node name="GameOverScreen" type="Control" parent="UI"]
+mouse_filter = 2
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+visible = false
+[node name="VictoryScreen" type="Control" parent="UI"]
+mouse_filter = 2
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+visible = false
+script = ExtResource( 1 )
