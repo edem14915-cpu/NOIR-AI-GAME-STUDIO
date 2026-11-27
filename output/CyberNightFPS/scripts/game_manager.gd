@@ -42,7 +42,7 @@ func start_next_wave() -> void:
 		return
 	
 	current_wave += 1
-	switch current_wave:
+	match current_wave:
 		1:
 			enemies_remaining_to_spawn = 5
 		2:
