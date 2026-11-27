@@ -1,28 +1,19 @@
 extends CharacterBody3D
-
-@onready var nav = $NavigationAgent3D
-var hp = 50
-var damage = 20
-var player_path = "/root/Main/Player"
-
+@onready var gm = get_node("/root/GameManager")
+var speed = 4.0
+var health = 50
 func _ready():
     add_to_group("enemies")
-    nav.target_position = get_node(player_path).global_transform.origin
-    set_process(true)
-    GameManager.connect("state_changed", self, "_on_state_changed")
-
-func _process(delta):
-    if GameManager.current_state != GameManager.State.PLAY:
+func _physics_process(delta):
+    var player = get_tree().get_root().get_node("Main/Player")
+    if not player:
         return
-    nav.target_position = get_node(player_path).global_transform.origin
-    var direction = (nav.get_next_path_position() - global_transform.origin).normalized()
-    velocity = direction * nav.max_speed
+    var dir = (player.global_transform.origin - global_transform.origin).normalized()
+    velocity = dir * speed
     move_and_slide()
-    if global_transform.origin.distance_to(get_node(player_path).global_transform.origin) < 1.5:
-        GameManager.player_hit(damage)
-
-func take_damage(amount):
-    hp -= amount
-    if hp <= 0:
+    if global_transform.origin.distance_to(player.global_transform.origin) < 1.5:
+        gm.player_hit(10)
+func take_damage(d):
+    health -= d
+    if health <= 0:
         queue_free()
-        GameManager.enemy_killed()
