@@ -144,6 +144,7 @@ grow_vertical = 0
 text = "RELOAD"
 
 [node name="StartMenu" type="ColorRect" parent="."]
+mouse_filter = 2
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -189,6 +190,7 @@ theme_override_font_sizes/font_size = 24
 text = "НАЧАТЬ БОЙ"
 
 [node name="GameOverMenu" type="ColorRect" parent="."]
+mouse_filter = 2
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -227,6 +229,7 @@ theme_override_font_sizes/font_size = 22
 text = "ПОПРОБОВАТЬ СНОВА"
 
 [node name="VictoryMenu" type="ColorRect" parent="."]
+mouse_filter = 2
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
