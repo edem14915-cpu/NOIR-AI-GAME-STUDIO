@@ -1,0 +1,11 @@
+[gd_scene load_steps=5 format=3]
+[node name="Enemy" type="CharacterBody3D"]
+script = ExtResource( 1 )
+[ext_resource type="Script" uid="1" path="res://scripts/enemy.gd"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy"]
+shape = CapsuleShape3D { radius = 0.5 height = 1.5 }
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Enemy"]
+mesh = SphereMesh { radius = 0.5 }
+material/0/albedo_color = Color(1,0,0)
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="Enemy"]
+max_speed = 4.0
