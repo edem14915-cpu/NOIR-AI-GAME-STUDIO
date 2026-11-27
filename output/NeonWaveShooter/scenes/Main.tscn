@@ -1,0 +1,19 @@
+[gd_scene load_steps=7 format=3]
+[ext_resource type="PackedScene" uid="1" path="res://scenes/Level1.tscn"]
+[ext_resource type="PackedScene" uid="2" path="res://scenes/Player.tscn"]
+[ext_resource type="PackedScene" uid="3" path="res://scenes/UI.tscn"]
+[node name="Main" type="Node3D"]
+[instance node="Level1" scene="res://scenes/Level1.tscn" parent="."]
+[instance node="Player" scene="res://scenes/Player.tscn" parent="."]
+[instance node="UI" scene="res://scenes/UI.tscn" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment"]
+environment/ambient_light_color = Color(0.05, 0.05, 0.1)
+environment/background_mode = 2
+environment/background_color = Color(0.0, 0.0, 0.0)
+environment/fog_enabled = true
+environment/fog_color = Color(0.0, 0.0, 0.1)
+environment/fog_density = 0.02
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+light_color = Color(0.4, 0.6, 1.0)
+light_energy = 1.2
+rotation_degrees = Vector3(-45, 30, 0)
