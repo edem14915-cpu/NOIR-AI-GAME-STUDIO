@@ -1,0 +1,130 @@
+extends CanvasLayer
+
+@onready var menu_screen = $MenuScreen
+@onready var start_button = $MenuScreen/StartButton
+@onready var gameover_screen = $GameOverScreen
+@onready var victory_screen = $VictoryScreen
+@onready var hud = $HUD
+
+@onready var hp_bar = $HUD/HPBar
+@onready var ammo_label = $HUD/AmmoLabel
+@onready var wave_label = $HUD/WaveLabel
+@onready var notice_label = $HUD/NoticeLabel
+
+@onready var joystick_base = $HUD/JoystickBase
+@onready var joystick_knob = $HUD/JoystickBase/Knob
+@onready var look_touch_area = $HUD/LookTouchArea
+@onready var fire_button = $HUD/FireButton
+@onready var reload_button = $HUD/ReloadButton
+
+var player: Node3D = null
+var joystick_active: bool = false
+var joystick_center: Vector2 = Vector2.ZERO
+var joystick_max_radius: float = 60.0
+var look_touch_id: int = -1
+var last_look_pos: Vector2 = Vector2.ZERO
+
+func _ready() -> void:
+	GameManager.state_changed.connect(this_on_state_changed)
+	GameManager.hp_changed.connect(this_on_hp_changed)
+	GameManager.ammo_changed.connect(this_on_ammo_changed)
+	GameManager.wave_started.connect(this_on_wave_started)
+	
+	start_button.pressed.connect(_on_start_pressed)
+	fire_button.pressed.connect(_on_fire_pressed)
+	reload_button.pressed.connect(_on_reload_pressed)
+
+	this_on_state_changed(GameManager.current_state)
+	notice_label.visible = false
+
+func _process(_delta: float) -> void:
+	if not player:
+		player = get_tree().get_first_node_in_group("player")
+
+func this_on_state_changed(state: int) -> void:
+	menu_screen.visible = (state == GameManager.State.MENU)
+	gameover_screen.visible = (state == GameManager.State.GAMEOVER)
+	victory_screen.visible = (state == GameManager.State.VICTORY)
+	hud.visible = (state == GameManager.State.PLAYING)
+	
+	if state == GameManager.State.PLAYING:
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	else:
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+func this_on_hp_changed(hp: float, max_hp: float) -> void:
+	hp_bar.value = (hp / max_hp) * 100.0
+
+func this_on_ammo_changed(ammo: int, reserve: int) -> void:
+	ammo_label.text = "AMMO: %d / %d" % [ammo, reserve]
+
+func this_on_wave_started(wave_num: int) -> void:
+	wave_label.text = "WAVE %d / 3" % wave_num
+	notice_label.text = "WAVE %d START!" % wave_num
+	notice_label.visible = true
+	await get_tree().create_timer(2.0).timeout
+	notice_label.visible = false
+
+# Touch Controls Logic
+func _input(event: InputEvent) -> void:
+	if GameManager.current_state != GameManager.State.PLAYING:
+		return
+	if not player:
+		player = get_tree().get_first_node_in_group("player")
+		
+	if event is InputEventScreenTouch:
+		var touch = event as InputEventScreenTouch
+		if touch.pressed:
+			# Left screen: Joystick
+			if touch.position.x < get_viewport().size.x * 0.45:
+				joystick_active = true
+				joystick_center = touch.position
+				joystick_base.position = joystick_center - joystick_base.size / 2.0
+				joystick_base.visible = true
+				joystick_knob.position = joystick_base.size / 2.0 - joystick_knob.size / 2.0
+			# Right screen: Look drag
+			elif touch.position.x > get_viewport().size.x * 0.55 and look_touch_id == -1:
+				look_touch_id = touch.index
+				last_look_pos = touch.position
+		else:
+			if joystick_active and touch.position.distance_to(joystick_center) < 200:
+				joystick_active = false
+				joystick_base.visible = false
+				if player:
+					player.joystick_vector = Vector2.ZERO
+					
+			if touch.index == look_touch_id:
+				look_touch_id = -1
+				
+	elif event is InputEventScreenDrag:
+		var drag = event as InputEventScreenDrag
+		if joystick_active:
+			var offset = drag.position - joystick_center
+			if offset.length() > joystick_max_radius:
+				offset = offset.normalized() * joystick_max_radius
+			joystick_knob.position = (joystick_base.size / 2.0 - joystick_knob.size / 2.0) + offset
+			if player:
+				player.joystick_vector = offset / joystick_max_radius
+				
+		elif drag.index == look_touch_id:
+			var delta = drag.position - last_look_pos
+			last_look_pos = drag.position
+			if player:
+				player.apply_look_delta(delta)
+
+func _on_start_button_pressed() -> void:
+	GameManager.start_game()
+
+func _on_restart_button_pressed() -> void:
+	GameManager.start_game()
+
+func _on_fire_button_down() -> void:
+	if player:
+		player.fire_pressed = true
+
+func _on_fire_button_up() -> void:
+	if player:
+		player.fire_pressed = false
+
+func _on_reload_button_pressed() -> void:
+	GameManager.reload_weapon()
