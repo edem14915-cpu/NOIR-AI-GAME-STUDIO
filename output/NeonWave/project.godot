@@ -1,0 +1,31 @@
+config_version=5
+
+[gd_scene load_steps=2 format=2]
+[ext_resource path="res://scenes/Main.tscn" type="PackedScene" id=1]
+[autoload]
+GameManager="res://scripts/game_manager.gd"
+
+[application]
+run/max_fps=90
+config/icon="res://icon.png"
+config/name="Neon Wave: Night Siege"
+run/main_scene=ExtResource( 1 )
+
+[display]
+window/frame_pacing/android/enable_frame_pacing=true
+window/handheld/orientation=0
+window/size=1280,720
+window/force_vsync=0
+window/size_override=true
+window/size_override_stretch=true
+
+[rendering]
+textures/vram_compression/import_etc2_astc=true
+rendering/renderer=mobile
+rendering/quality/driver_name="GLES3"
+
+[window]
+orientation="landscape"
+
+[physics]
+3d/default_gravity=9.8
