@@ -1,0 +1,16 @@
+[gd_resource type="ProjectSettings" load_steps=2 format=2]
+[application]
+run/max_fps=90
+config/icon="res://icon.png"
+config/name="Neon Wave Shooter"
+run/main_scene="res://scenes/Main.tscn"
+[display]
+window/frame_pacing/android/enable_frame_pacing=true
+window/handheld/orientation=0
+window/size=1280,720
+window/handheld_orientation=landscape
+[rendering]
+textures/vram_compression/import_etc2_astc=true
+renderer/driver_name="mobile"
+[autoload]
+GameManager="*res://scripts/game_manager.gd"
