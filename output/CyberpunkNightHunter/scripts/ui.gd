@@ -13,6 +13,7 @@ extends CanvasLayer
 @onready var restart_go_btn: Button = $GameOverMenu/VBox/RestartBtnGO
 @onready var restart_vic_btn: Button = $VictoryMenu/VBox/RestartBtnVic
 @onready var shoot_btn: Button = $HUD/ShootBtn
+@onready var reload_btn: Button = $HUD/ReloadBtn
 @onready var joystick: Control = $HUD/VirtualJoystick
 @onready var touch_look_zone: Control = $HUD/TouchZoneLook
 
@@ -26,6 +27,7 @@ func _ready() -> void:
 	restart_vic_btn.pressed.connect(_on_start_pressed)
 	
 	shoot_btn.pressed.connect(_on_shoot_pressed)
+	reload_btn.pressed.connect(_on_reload_pressed)
 	
 	GameManager.hp_changed.connect(_on_hp_changed)
 	GameManager.ammo_changed.connect(_on_ammo_changed)
@@ -98,3 +100,7 @@ func _on_game_over() -> void:
 func _on_victory() -> void:
 	hud.visible = false
 	victory_menu.visible = true
+
+
+func _on_reload_pressed() -> void:
+GameManager.reload_ammo()
