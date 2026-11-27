@@ -1,0 +1,100 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/Enemy.tscn" id="1_enm"]
+[ext_resource type="PackedScene" path="res://scenes/Pickup.tscn" id="2_pck"]
+[ext_resource type="PackedScene" path="res://scenes/Goal.tscn" id="3_gol"]
+
+[sub_resource type="RectangleShape2D" id="1"]
+size = Vector2(300, 40)
+
+[node name="Level1" type="Node2D"]
+
+[node name="Background" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="BGColor" type="ColorRect" parent="Background"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.03, 0.12, 1)
+
+[node name="Platforms" type="Node2D" parent="."]
+
+[node name="Platform1" type="StaticBody2D" parent="Platforms"]
+position = Vector2(120, 800)
+
+[node name="ColorRect" type="ColorRect" parent="Platforms/Platform1"]
+offset_left = -150.0
+offset_top = -20.0
+offset_right = 150.0
+offset_bottom = 20.0
+color = Color(0.15, 0.15, 0.3, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platforms/Platform1"]
+shape = SubResource("1")
+
+[node name="Platform2" type="StaticBody2D" parent="Platforms"]
+position = Vector2(450, 720)
+
+[node name="ColorRect" type="ColorRect" parent="Platforms/Platform2"]
+offset_left = -150.0
+offset_top = -20.0
+offset_right = 150.0
+offset_bottom = 20.0
+color = Color(0.15, 0.15, 0.3, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platforms/Platform2"]
+shape = SubResource("1")
+
+[node name="Platform3" type="StaticBody2D" parent="Platforms"]
+position = Vector2(800, 640)
+
+[node name="ColorRect" type="ColorRect" parent="Platforms/Platform3"]
+offset_left = -150.0
+offset_top = -20.0
+offset_right = 150.0
+offset_bottom = 20.0
+color = Color(0.15, 0.15, 0.3, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platforms/Platform3"]
+shape = SubResource("1")
+
+[node name="Platform4" type="StaticBody2D" parent="Platforms"]
+position = Vector2(1150, 560)
+
+[node name="ColorRect" type="ColorRect" parent="Platforms/Platform4"]
+offset_left = -150.0
+offset_top = -20.0
+offset_right = 150.0
+offset_bottom = 20.0
+color = Color(0.15, 0.15, 0.3, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platforms/Platform4"]
+shape = SubResource("1")
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="Enemy1" parent="Enemies" instance=ExtResource("1_enm")]
+position = Vector2(450, 680)
+
+[node name="Enemy2" parent="Enemies" instance=ExtResource("1_enm")]
+position = Vector2(800, 600)
+
+[node name="Pickups" type="Node2D" parent="."]
+
+[node name="Pickup1" parent="Pickups" instance=ExtResource("2_pck")]
+position = Vector2(200, 750)
+
+[node name="Pickup2" parent="Pickups" instance=ExtResource("2_pck")]
+position = Vector2(450, 650)
+
+[node name="Pickup3" parent="Pickups" instance=ExtResource("2_pck")]
+position = Vector2(750, 570)
+
+[node name="Pickup4" parent="Pickups" instance=ExtResource("2_pck")]
+position = Vector2(1050, 490)
+
+[node name="Goal" parent="." instance=ExtResource("3_gol")]
+position = Vector2(1220, 510)
