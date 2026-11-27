@@ -1,0 +1,2 @@
+All visual assets are generated with primitive CSG shapes and ColorRect textures. Joystick and button textures are simple placeholder PNGs (128x128) with transparent background and a solid color circle.
+No external models are required.
