@@ -1,6 +1,7 @@
 extends CanvasLayer
 
 @onready var menu_screen = $MenuScreen
+@onready var start_button = $MenuScreen/StartButton
 @onready var gameover_screen = $GameOverScreen
 @onready var victory_screen = $VictoryScreen
 @onready var hud = $HUD
@@ -24,11 +25,15 @@ var look_touch_id: int = -1
 var last_look_pos: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
-	GameManager.connect("state_changed", Callable(this_on_state_changed))
-	GameManager.connect("hp_changed", Callable(this_on_hp_changed))
-	GameManager.connect("ammo_changed", Callable(this_on_ammo_changed))
-	GameManager.connect("wave_started", Callable(this_on_wave_started))
+	GameManager.state_changed.connect(this_on_state_changed)
+	GameManager.hp_changed.connect(this_on_hp_changed)
+	GameManager.ammo_changed.connect(this_on_ammo_changed)
+	GameManager.wave_started.connect(this_on_wave_started)
 	
+	start_button.pressed.connect(_on_start_pressed)
+	fire_button.pressed.connect(_on_fire_pressed)
+	reload_button.pressed.connect(_on_reload_pressed)
+
 	this_on_state_changed(GameManager.current_state)
 	notice_label.visible = false
 
@@ -64,6 +69,10 @@ func this_on_wave_started(wave_num: int) -> void:
 func _input(event: InputEvent) -> void:
 	if GameManager.current_state != GameManager.State.PLAYING:
 		return
+	if not player:
+		player = get_tree().get_first_node_in_group("player")
+	if not player:
+		player = get_tree().get_first_node_in_group("player")
 		
 	if event is InputEventScreenTouch:
 		var touch = event as InputEventScreenTouch
@@ -91,7 +100,7 @@ func _input(event: InputEvent) -> void:
 				
 	elif event is InputEventScreenDrag:
 		var drag = event as InputEventScreenDrag
-		if joystick_active and drag.position.distance_to(joystick_center) < 250:
+		if joystick_active:
 			var offset = drag.position - joystick_center
 			if offset.length() > joystick_max_radius:
 				offset = offset.normalized() * joystick_max_radius
