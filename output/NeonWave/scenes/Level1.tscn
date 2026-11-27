@@ -1,0 +1,37 @@
+[gd_scene load_steps=3 format=2]
+[ext_resource path="res://scripts/enemy.gd" type="Script" id=1]
+
+[node name="Level1" type="Node3D"]
+
+[node name="Floor" type="CSGBox3D" parent="Level1"]
+size = Vector3( 50, 1, 50 )
+transform = Transform3D( 1,0,0,0,1,0,0,0,1, 0,-0.5,0 )
+material = SubResource( 1 )
+
+[sub_resource type="StandardMaterial3D" id=1]
+albedo_color = Color(0.1,0.1,0.12,1)
+roughness = 1.0
+
+[node name="WallNorth" type="CSGBox3D" parent="Level1"]
+size = Vector3( 50, 10, 1 )
+transform = Transform3D( 1,0,0,0,1,0,0,0,1, 0,5, -25 )
+material = SubResource( 1 )
+
+[node name="WallSouth" type="CSGBox3D" parent="Level1"]
+size = Vector3( 50, 10, 1 )
+transform = Transform3D( 1,0,0,0,1,0,0,0,1, 0,5, 25 )
+material = SubResource( 1 )
+
+[node name="WallEast" type="CSGBox3D" parent="Level1"]
+size = Vector3( 1, 10, 50 )
+transform = Transform3D( 1,0,0,0,1,0,0,0,1, 25,5,0 )
+material = SubResource( 1 )
+
+[node name="WallWest" type="CSGBox3D" parent="Level1"]
+size = Vector3( 1, 10, 50 )
+transform = Transform3D( 1,0,0,0,1,0,0,0,1, -25,5,0 )
+material = SubResource( 1 )
+
+# Enemy spawner (simple example)
+[node name="EnemySpawner" type="Node3D" parent="Level1"]
+script = ExtResource( 1 )
