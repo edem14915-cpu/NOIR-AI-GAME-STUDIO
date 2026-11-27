@@ -5,8 +5,8 @@ extends Node3D
 @onready var spawn_timer: Timer = $SpawnTimer
 
 func _ready() -> void:
-	GameManager.connect("state_changed", Callable(this_on_state_changed))
-	spawn_timer.connect("timeout", Callable(this_on_spawn_timer_timeout))
+	GameManager.state_changed.connect(this_on_state_changed)
+	spawn_timer.timeout.connect(this_on_spawn_timer_timeout)
 
 func this_on_state_changed(state: int) -> void:
 	if state == GameManager.State.PLAYING:
